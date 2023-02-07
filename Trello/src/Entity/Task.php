@@ -22,7 +22,7 @@ class Task
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
-    private ?TaskList $task_list_id = null;
+    private ?TaskList $task_list= null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'task')]
     private Collection $users;
@@ -63,12 +63,12 @@ class Task
 
     public function getTaskListId(): ?TaskList
     {
-        return $this->task_list_id;
+        return $this->task_list;
     }
 
-    public function setTaskListId(?TaskList $task_list_id): self
+    public function setTaskListId(?TaskList $task_list): self
     {
-        $this->task_list_id = $task_list_id;
+        $this->task_list = $task_list;
 
         return $this;
     }

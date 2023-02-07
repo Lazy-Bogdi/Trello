@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Board;
 use App\Form\BoardType;
 use App\Repository\BoardRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,8 +23,9 @@ class BoardController extends AbstractController
     }
 
     #[Route('/new', name: 'app_board_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, BoardRepository $boardRepository): Response
+    public function new(Request $request, BoardRepository $boardRepository, UserRepository $userRepo): Response
     {
+        $users = $userRepo->findAll();
         $board = new Board();
         $form = $this->createForm(BoardType::class, $board);
         $form->handleRequest($request);
@@ -37,6 +39,7 @@ class BoardController extends AbstractController
         return $this->renderForm('board/new.html.twig', [
             'board' => $board,
             'form' => $form,
+            'users' => $users
         ]);
     }
 

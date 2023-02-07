@@ -20,14 +20,14 @@ class Board
     #[ORM\Column(length: 50)]
     private ?string $board_name = null;
 
-    #[ORM\OneToMany(mappedBy: 'board_id', targetEntity: TaskList::class)]
+    #[ORM\OneToMany(mappedBy: 'board', targetEntity: TaskList::class)]
     private Collection $taskLists;
 
     #[ORM\ManyToOne(inversedBy: 'boards')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $owner_id = null;
+    private ?User $owner = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'board_id')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'board')]
     private Collection $users;
 
 
@@ -89,12 +89,12 @@ class Board
 
     public function getOwnerId(): ?User
     {
-        return $this->owner_id;
+        return $this->owner;
     }
 
-    public function setOwnerId(?User $owner_id): self
+    public function setOwnerId(?User $owner): self
     {
-        $this->owner_id = $owner_id;
+        $this->owner = $owner;
 
         return $this;
     }

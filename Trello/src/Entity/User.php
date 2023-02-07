@@ -37,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
-    #[ORM\OneToMany(mappedBy: 'owner_id', targetEntity: Board::class)]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Board::class)]
     private Collection $boards;
 
     #[ORM\ManyToMany(targetEntity: Board::class, inversedBy: 'users')]

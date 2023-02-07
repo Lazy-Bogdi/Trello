@@ -19,9 +19,9 @@ class TaskList
     private ?string $task_list_name = null;
 
     #[ORM\ManyToOne(inversedBy: 'taskLists')]
-    private ?Board $board_id = null;
+    private ?Board $board = null;
 
-    #[ORM\OneToMany(mappedBy: 'task_list_id', targetEntity: Task::class)]
+    #[ORM\OneToMany(mappedBy: 'task_list', targetEntity: Task::class)]
     private Collection $tasks;
 
     public function __construct()
@@ -48,12 +48,12 @@ class TaskList
 
     public function getBoardId(): ?Board
     {
-        return $this->board_id;
+        return $this->board;
     }
 
-    public function setBoardId(?Board $board_id): self
+    public function setBoardId(?Board $board): self
     {
-        $this->board_id = $board_id;
+        $this->board = $board;
 
         return $this;
     }
