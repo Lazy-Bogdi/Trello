@@ -15,9 +15,7 @@ class Board
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'boards')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $owner_id = null;
+  
 
     #[ORM\Column(length: 50)]
     private ?string $board_name = null;
@@ -25,9 +23,20 @@ class Board
     #[ORM\OneToMany(mappedBy: 'board_id', targetEntity: TaskList::class)]
     private Collection $taskLists;
 
+    #[ORM\ManyToOne(inversedBy: 'boards')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $owner_id = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'board_id')]
+    private Collection $users;
+
+
+
     public function __construct()
     {
         $this->taskLists = new ArrayCollection();
+        $this->users = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -35,17 +44,6 @@ class Board
         return $this->id;
     }
 
-    public function getOwnerId(): ?User
-    {
-        return $this->owner_id;
-    }
-
-    public function setOwnerId(?User $owner_id): self
-    {
-        $this->owner_id = $owner_id;
-
-        return $this;
-    }
 
     public function getBoardName(): ?string
     {
@@ -88,4 +86,44 @@ class Board
 
         return $this;
     }
+
+    public function getOwnerId(): ?User
+    {
+        return $this->owner_id;
+    }
+
+    public function setOwnerId(?User $owner_id): self
+    {
+        $this->owner_id = $owner_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addBoardId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeBoardId($this);
+        }
+
+        return $this;
+    }
+
 }

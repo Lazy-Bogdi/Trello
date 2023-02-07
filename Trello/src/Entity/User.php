@@ -32,16 +32,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'owner_id', targetEntity: Board::class)]
-    private Collection $boards;
+
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\OneToMany(mappedBy: 'owner_id', targetEntity: Board::class)]
+    private Collection $boards;
+
+    #[ORM\ManyToMany(targetEntity: Board::class, inversedBy: 'users')]
+    private Collection $board_id;
+
+    #[ORM\ManyToMany(targetEntity: Task::class, inversedBy: 'users')]
+    private Collection $task;
+
     public function __construct()
     {
         $this->boards = new ArrayCollection();
+        $this->board_id = new ArrayCollection();
+        $this->task = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -113,6 +124,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+
+
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Board>
      */
@@ -143,15 +169,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
+    /**
+     * @return Collection<int, Board>
+     */
+    public function getBoardId(): Collection
     {
-        return $this->isVerified;
+        return $this->board_id;
     }
 
-    public function setIsVerified(bool $isVerified): self
+    public function addBoardId(Board $boardId): self
     {
-        $this->isVerified = $isVerified;
+        if (!$this->board_id->contains($boardId)) {
+            $this->board_id->add($boardId);
+        }
 
         return $this;
     }
+
+    public function removeBoardId(Board $boardId): self
+    {
+        $this->board_id->removeElement($boardId);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTask(): Collection
+    {
+        return $this->task;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->task->contains($task)) {
+            $this->task->add($task);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        $this->task->removeElement($task);
+
+        return $this;
+    }
+
+
+
+
+
+
 }
