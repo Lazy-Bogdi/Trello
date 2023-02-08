@@ -40,17 +40,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Board::class)]
     private Collection $boards;
 
-    #[ORM\ManyToMany(targetEntity: Board::class, inversedBy: 'users')]
-    private Collection $board_id;
 
     #[ORM\ManyToMany(targetEntity: Task::class, inversedBy: 'users')]
     private Collection $task;
 
+    #[ORM\ManyToMany(targetEntity: Board::class, mappedBy: 'user')]
+    private Collection $my_boards;
+
     public function __construct()
     {
         $this->boards = new ArrayCollection();
-        $this->board_id = new ArrayCollection();
         $this->task = new ArrayCollection();
+        $this->my_boards = new ArrayCollection();
     }
 
 
@@ -139,59 +140,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Board>
-     */
-    public function getBoards(): Collection
-    {
-        return $this->boards;
-    }
 
-    public function addBoard(Board $board): self
-    {
-        if (!$this->boards->contains($board)) {
-            $this->boards->add($board);
-            $board->setOwnerId($this);
-        }
 
-        return $this;
-    }
-
-    public function removeBoard(Board $board): self
-    {
-        if ($this->boards->removeElement($board)) {
-            // set the owning side to null (unless already changed)
-            if ($board->getOwnerId() === $this) {
-                $board->setOwnerId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Board>
-     */
-    public function getBoardId(): Collection
-    {
-        return $this->board_id;
-    }
-
-    public function addBoardId(Board $boardId): self
-    {
-        if (!$this->board_id->contains($boardId)) {
-            $this->board_id->add($boardId);
-        }
-
-        return $this;
-    }
-
-    public function removeBoardId(Board $boardId): self
-    {
-        $this->board_id->removeElement($boardId);
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Task>
@@ -213,6 +163,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeTask(Task $task): self
     {
         $this->task->removeElement($task);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Board>
+     */
+    public function getMyBoards(): Collection
+    {
+        return $this->my_boards;
+    }
+
+    public function addMyBoard(Board $myBoard): self
+    {
+        if (!$this->my_boards->contains($myBoard)) {
+            $this->my_boards->add($myBoard);
+            $myBoard->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMyBoard(Board $myBoard): self
+    {
+        if ($this->my_boards->removeElement($myBoard)) {
+            $myBoard->removeUser($this);
+        }
 
         return $this;
     }

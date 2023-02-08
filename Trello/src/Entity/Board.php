@@ -24,19 +24,20 @@ class Board
     private Collection $taskLists;
 
     #[ORM\ManyToOne(inversedBy: 'boards')]
-    #[ORM\JoinColumn(nullable: false)] 
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'board')]
-    private Collection $users;
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'my_boards')]
+    private Collection $user;
+
+
 
 
 
     public function __construct()
     {
         $this->taskLists = new ArrayCollection();
-        $this->users = new ArrayCollection();
-
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -102,16 +103,15 @@ class Board
     /**
      * @return Collection<int, User>
      */
-    public function getUsers(): Collection
+    public function getUser(): Collection
     {
-        return $this->users;
+        return $this->user;
     }
 
     public function addUser(User $user): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addBoardId($this);
+        if (!$this->user->contains($user)) {
+            $this->user->add($user);
         }
 
         return $this;
@@ -119,11 +119,10 @@ class Board
 
     public function removeUser(User $user): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeBoardId($this);
-        }
+        $this->user->removeElement($user);
 
         return $this;
     }
+
 
 }
