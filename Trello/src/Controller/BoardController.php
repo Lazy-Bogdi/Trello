@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Board;
 use App\Form\BoardType;
 use App\Repository\BoardRepository;
@@ -25,10 +26,13 @@ class BoardController extends AbstractController
     #[Route('/new', name: 'app_board_new', methods: ['GET', 'POST'])]
     public function new(Request $request, BoardRepository $boardRepository, UserRepository $userRepo): Response
     {
-        $users = $userRepo->findAll();
+        
         $board = new Board();
         $form = $this->createForm(BoardType::class, $board);
-        $form->handleRequest($request);
+        $user = $this->getUser();
+        $board->setOwnerId($user);
+
+        $form->handleRequest($request);       
 
         if ($form->isSubmitted() && $form->isValid()) {
             $boardRepository->save($board, true);
@@ -36,10 +40,10 @@ class BoardController extends AbstractController
             return $this->redirectToRoute('app_board_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('board/new.html.twig', [
+       
+        return $this->render('board/new.html.twig', [
             'board' => $board,
-            'form' => $form,
-            'users' => $users
+            'form' => $form
         ]);
     }
 

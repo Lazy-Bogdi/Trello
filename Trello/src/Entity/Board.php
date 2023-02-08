@@ -24,7 +24,7 @@ class Board
     private Collection $taskLists;
 
     #[ORM\ManyToOne(inversedBy: 'boards')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false)] 
     private ?User $owner = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'board')]
