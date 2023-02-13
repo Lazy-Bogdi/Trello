@@ -3,8 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Board;
+use App\Entity\User;
+
 use App\Form\BoardType;
+
 use App\Repository\BoardRepository;
+use App\Repository\UserRepository;
+
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +22,16 @@ class BoardController extends AbstractController
     #[Route('/', name: 'app_board_index', methods: ['GET'])]
     public function index(BoardRepository $boardRepository): Response
     {
+        $user = $this->getUser();
+        $ownerBoards = $boardRepository->findBy(['owner' => $user]);
+        $userBoards = $user->getMyBoards();
+
+
+        // dd($userBoards);
+
         return $this->render('board/index.html.twig', [
-            'boards' => $boardRepository->findAll(),
+            'ownerBoards' => $ownerBoards,
+            'userBoards' => $userBoards
         ]);
     }
 
