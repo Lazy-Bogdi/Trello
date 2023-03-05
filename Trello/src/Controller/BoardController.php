@@ -70,7 +70,7 @@ class BoardController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_board_show', methods: ['GET', 'POST'])]
-    public function show(Board $board, Request $request, BoardRepository $boardRepository, TaskList $tasklist): Response
+    public function show(Board $board, Request $request, BoardRepository $boardRepository): Response
     {
         // Nouveau tableau de tâches 
         $newTaskList = new TaskList();

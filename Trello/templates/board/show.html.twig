@@ -46,22 +46,8 @@
     <div class="taskList-card">
         <h3>{{ taskList.tasklistname }}</h3>
         <h4>{{ taskList.id }}</h4>
-        {% set formId = 'newTaskForm_' ~ taskList.id %}
-        {% set fieldNamePrefix = 'taskList[' ~ taskList.id ~ ']' %}
-        {{ form_start(formNewTask) }}
-        <div class="form-group">
-            {{ form_label(formNewTask.task_name, null, {'label_attr': {'for': 'task_name_' ~ taskList.id}}) }}
-            {{ form_widget(formNewTask.task_name, {'attr': {'id': 'task_name_' ~ taskList.id, 'name': fieldNamePrefix ~ '[task_name]'}}) }}
-            {{ form_errors(formNewTask.task_name) }}
-        </div>
-        <div class="form-group">
-            {{ form_label(formNewTask.description, null, {'label_attr': {'for': 'description_' ~ taskList.id}}) }}
-            {{ form_widget(formNewTask.description, {'attr': {'id': 'description_' ~ taskList.id, 'name': fieldNamePrefix ~ '[description]'}}) }}
-            {{ form_errors(formNewTask.description) }}
-        </div>
-        <button type="submit" class="btn btn-primary">Create Task</button>
-        {{ form_end(formNewTask) }}
 
+        
 
     </div>
     {% else %}
