@@ -9,10 +9,10 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<TaskList>
  *
- * @method TaskList|null find($id, $lockMode = null, $lockVersion = null)
- * @method TaskList|null findOneBy(array $criteria, array $orderBy = null)
- * @method TaskList[]    findAll()
- * @method TaskList[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Task|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Task|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Task[]    findAll()
+ * @method Task[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class TaskListRepository extends ServiceEntityRepository
 {
@@ -40,7 +40,7 @@ class TaskListRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return TaskList[] Returns an array of TaskList objects
+//     * @return Task[] Returns an array of Task objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class TaskListRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?TaskList
+//    public function findOneBySomeField($value): ?Task
 //    {
 //        return $this->createQueryBuilder('t')
 //            ->andWhere('t.exampleField = :val')

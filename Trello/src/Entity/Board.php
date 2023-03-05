@@ -20,7 +20,7 @@ class Board
     #[ORM\Column(length: 50)]
     private ?string $board_name = null;
 
-    #[ORM\OneToMany(mappedBy: 'board', targetEntity: TaskList::class)]
+    #[ORM\OneToMany(mappedBy: 'board', targetEntity: TaskList::class, cascade: ['persist'])]
     private Collection $taskLists;
 
     #[ORM\ManyToOne(inversedBy: 'boards')]

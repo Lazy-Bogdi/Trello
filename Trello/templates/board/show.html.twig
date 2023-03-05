@@ -2,25 +2,74 @@
 
 {% block title %}Board{% endblock %}
 
+
+{% block stylesheets %}
+<link href="{{ asset('boards/css/board.css') }}" rel="stylesheet" />
+
+{% endblock %}
+
 {% block body %}
-    <h1>Board</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ board.id }}</td>
-            </tr>
-            <tr>
-                <th>Board_name</th>
-                <td>{{ board.boardName }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_board_index') }}">back to list</a>
+<h1>Board</h1>
 
-    <a href="{{ path('app_board_edit', {'id': board.id}) }}">edit</a>
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ board.id }}</td>
+            <td>{{ board.ownerid.id }}</td>
+            <td>{{ userId }}</td>
+        </tr>
+        <tr>
+            <th>Board_name</th>
+            <td>{{ board.boardName }}</td>
+        </tr>
+    </tbody>
+</table>
 
-    {{ include('board/_delete_form.html.twig') }}
+<a href="{{ path('app_board_index') }}">back to list</a>
+
+{% if board.ownerid.id == userId %}
+<a href="{{ path('app_board_edit', {'id': board.id}) }}">edit</a>
+{% endif %}
+
+
+
+{{ include('board/_delete_form.html.twig') }}
+
+
+
+<div class="taskList-container">
+    {% for taskList in taskLists %}
+
+    <div class="taskList-card">
+        <h3>{{ taskList.tasklistname }}</h3>
+        <h4>{{ taskList.id }}</h4>
+        {% set formId = 'newTaskForm_' ~ taskList.id %}
+        {% set fieldNamePrefix = 'taskList[' ~ taskList.id ~ ']' %}
+        {{ form_start(formNewTask) }}
+        <div class="form-group">
+            {{ form_label(formNewTask.task_name, null, {'label_attr': {'for': 'task_name_' ~ taskList.id}}) }}
+            {{ form_widget(formNewTask.task_name, {'attr': {'id': 'task_name_' ~ taskList.id, 'name': fieldNamePrefix ~ '[task_name]'}}) }}
+            {{ form_errors(formNewTask.task_name) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(formNewTask.description, null, {'label_attr': {'for': 'description_' ~ taskList.id}}) }}
+            {{ form_widget(formNewTask.description, {'attr': {'id': 'description_' ~ taskList.id, 'name': fieldNamePrefix ~ '[description]'}}) }}
+            {{ form_errors(formNewTask.description) }}
+        </div>
+        <button type="submit" class="btn btn-primary">Create Task</button>
+        {{ form_end(formNewTask) }}
+
+
+    </div>
+    {% else %}
+    <p>No Tasklists</p>
+    {% endfor %}
+    {{ form_start(formNewTaskList) }}
+    {{ form_widget(formNewTaskList) }}
+    <button class="btn">{{ button_label|default('New') }}</button>
+    {{ form_end(formNewTaskList) }}
+</div>
 {% endblock %}
