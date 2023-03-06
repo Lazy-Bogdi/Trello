@@ -134,9 +134,9 @@ class BoardController extends AbstractController
     #[Route('/{id}', name: 'app_board_delete', methods: ['POST'])]
     public function delete(Request $request, Board $board, BoardRepository $boardRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $board->getId(), $request->request->get('_token'))) {
+        // if ($this->isCsrfTokenValid('delete' . $board->getId(), $request->request->get('_token'))) {
             $boardRepository->remove($board, true);
-        }
+        // }
 
         return $this->redirectToRoute('app_board_index', [], Response::HTTP_SEE_OTHER);
     }

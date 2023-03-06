@@ -1,39 +1,49 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Kanban Board{% endblock %}
+{% block stylesheets %}
+<link href="{{ asset('boards/css/index.css') }}" rel="stylesheet" />
+
+{% endblock %}
 
 {% block body %}
-<h1>Kanban Board</h1>
-<div>
-    <h2>My Boards</h2>
-
-    <div class="board-container">
-        {% for board in ownerBoards %}
-        <div class="board-card">
-            <h3>{{ board.boardName }}</h3>
-            <div class="board-actions">
-                <a href="{{ path('app_board_show', {'id': board.id}) }}">View</a>
-                <a href="{{ path('app_board_edit', {'id': board.id}) }}">Edit</a>
+    <div class="container">
+        <h1>Trellowquality</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="my-boards">
+                    <h2>My Boards</h2>
+                    <div class="board-container">
+                        {% for board in ownerBoards %}
+                            <div class="board-card">
+                                <h3>{{ board.boardName }}</h3>
+                                <div class="board-actions">
+                                    <a href="{{ path('app_board_show', {'id': board.id}) }}" class="btn btn-secondary">View</a>
+                                    <a href="{{ path('app_board_edit', {'id': board.id}) }}" class="btn btn-primary">Edit</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <p>No boards found</p>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ path('app_board_new') }}" class="create-board-button btn btn-success btn-block my-4">Create New Board</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="associated-boards">
+                    <h2>Associated Boards</h2>
+                    <div class="board-container">
+                        {% for board in userBoards %}
+                            <div class="board-card">
+                                <h3>{{ board.boardName }}</h3>
+                                <a href="{{ path('app_board_show', {'id': board.id}) }}" class="btn btn-secondary">View</a>
+                            </div>
+                        {% else %}
+                            <p>No associated boards found</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
-        {% else %}
-        <p>No boards found</p>
-        {% endfor %}
     </div>
-    <a href="{{ path('app_board_new') }}" class="create-board-button">Create New Board</a>
-</div>
-<div>
-    <h2>Associated Boards</h2>
-
-    <div class="board-container">
-        {% for board in userBoards %}
-        <div class="board-card">
-            <h3>{{ board.boardName }}</h3>
-            <a href="{{ path('app_board_show', {'id': board.id}) }}">View</a>²
-        </div>
-        {% else %}
-        <p>No associated boards found</p>
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}

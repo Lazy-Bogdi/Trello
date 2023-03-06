@@ -1,0 +1,15 @@
+.card {
+    margin-top: 50px;
+}
+
+.card-header {
+    background-color: #eee;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.btn {
+    margin-top: 10px;
+}
