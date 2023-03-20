@@ -10,6 +10,7 @@ use App\Form\BoardType;
 
 use App\Form\newTaskListType;
 use App\Repository\BoardRepository;
+use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 
 use App\Form\newTaskType;
@@ -70,7 +71,7 @@ class BoardController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_board_show', methods: ['GET', 'POST'])]
-    public function show(Board $board, Request $request, BoardRepository $boardRepository): Response
+    public function show(Board $board, Request $request, BoardRepository $boardRepository, TaskRepository $taskRepo): Response
     {
         // Nouveau tableau de tâches 
         $newTaskList = new TaskList();
@@ -87,27 +88,13 @@ class BoardController extends AbstractController
             return $this->redirectToRoute('app_board_show', ['id' => $idFromRequest], Response::HTTP_SEE_OTHER);
         }
         $taskLists = $board->getTaskLists()->getValues();
+        // dd($board->getTaskLists()->getValues()[0]->getTasks()->getValues()[0]->getUsers()->getValues());
 
-        // Nouvelles tâches par tableau de tâches
-        $newTask = new Task();
-        $taskForm = $this->createForm(newTaskType::class, $newTask);
-        $taskForm->handleRequest($request);
-
-        if ($taskForm->isSubmitted() && $taskForm->isValid()) {
-            $taskListId = $request->request->get('taskListId');
-            $newTask->setTaskListId($taskListId);
-
-            $boardRepository->save($board, true);
-
-            $idFromRequest = $request->attributes->get('id');
-            return $this->redirectToRoute('app_board_show', ['id' => $idFromRequest], Response::HTTP_SEE_OTHER);
-        }
 
         // dd($taskLists);
         return $this->render('board/show.html.twig', [
             'board' => $board,
             'formNewTaskList' => $taskListForm,
-            'formNewTask' => $taskForm,
             'taskLists' => $taskLists,
             'userId' => $user->getId()
         ]);

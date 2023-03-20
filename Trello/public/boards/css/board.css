@@ -4,12 +4,17 @@
 
 .taskList-card {
     min-height: 500px;
-    width: 272px;
-    margin: 10px 16px 0 0;
+    width: 400px;
+    margin: 20px 16px 0 0;
     padding: 8px;
     background-color: #ebecf0;
     border-radius: 20px;
     box-shadow: 0 1px 0 rgba(9,30,66,.25);
+}
+
+.task-card{
+    width: 200px;
+    word-wrap: break-word;
 }
 
 .taskList-card h3 {

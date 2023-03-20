@@ -10,42 +10,61 @@
 
 {% block body %}
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="mt-4 mb-4">Board</h1>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="mt-4 mb-4">{{ board.boardname }}</h1>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <a class="btn btn-secondary mt-4" href="{{ path('app_board_index') }}">Back to list</a>
-                {% if board.ownerid.id == userId %}
-                    <a class="btn btn-primary mt-4" href="{{ path('app_board_edit', {'id': board.id}) }}">Edit</a>
-                    {{ include('board/_delete_form.html.twig') }}
-                {% endif %}
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <a class="btn btn-secondary btn-sm mt-4" href="{{ path('app_board_index') }}">Back to my boards</a>
+            {% if board.ownerid.id == userId %}
+            <a class="btn btn-primary btn-sm mt-4" href="{{ path('app_board_edit', {'id': board.id}) }}">Edit</a>
+            {{ include('board/_delete_form.html.twig') }}
+            {% endif %}
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="taskList-container">
-                    {% for taskList in taskLists %}
-                        <div class="taskList-card">
-                            <h3>{{ taskList.tasklistname }}</h3>
-                        </div>
-                    {% else %}
-                        <p>No Tasklists</p>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="taskList-container">
+                {% for taskList in taskLists %}
+                <div class="taskList-card">
+                    <h3>{{ taskList.tasklistname }}</h3>
+                    {% for task in taskList.tasks %}
+                    {% if board.ownerid.id == userId %}
+                    <div class="task-card">
+                        <div>Task name : {{ task.taskname }}</div>
+                        <div>Description : {{ task.description }} </div>
+                        <div> Users assigned to this task: </div>
+                        {% for user in task.users %}
+                        <div> {{ user.email }} </div>
+                        {% endfor %}
+                        <a href="{{ path('app_task_edit', {'idBoard': board.id, 'idTL': taskList.id, 'idT': task.id}) }}" class="btn btn-primary"><i class="fas fa-pen-square"></i></a>
+                    </div>
+                    <hr>
+                    {% endif %}
                     {% endfor %}
-                    {{ form_start(formNewTaskList) }}
-                        {{ form_widget(formNewTaskList) }}
-                        <button class="btn btn-success">{{ button_label|default('New') }}</button>
-                    {{ form_end(formNewTaskList) }}
+
+
+                    <a class="btn btn-primary btn-sm mt-4"
+                        href="{{ path('app_task_new', {'idBoard': board.id , 'idTL': taskList.id}) }}">new Task</a>
                 </div>
+                {% else %}
+                <p>No Tasklists</p>
+                {% endfor %}
+                {{ form_start(formNewTaskList) }}
+                {{ form_widget(formNewTaskList) }}
+                <button class="btn btn-sm btn-success">{{ button_label|default('New') }}</button>
+                {{ form_end(formNewTaskList) }}
             </div>
         </div>
     </div>
+</div>
 
 {% endblock %}

@@ -41,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $boards;
 
 
-    #[ORM\ManyToMany(targetEntity: Task::class, inversedBy: 'users')]
+    #[ORM\ManyToMany(targetEntity: Task::class, inversedBy: 'users', cascade: ['persist'])]
     private Collection $task;
 
     #[ORM\ManyToMany(targetEntity: Board::class, mappedBy: 'user')]
