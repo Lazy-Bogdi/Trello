@@ -54,6 +54,9 @@
 
                     <a class="btn btn-primary btn-sm mt-4"
                         href="{{ path('app_task_new', {'idBoard': board.id , 'idTL': taskList.id}) }}">new Task</a>
+                        <a class="btn btn-primary btn-sm mt-4"
+                        href="{{ path('app_tasklist_edit', {'idBoard': board.id , 'idTL': taskList.id}) }}">Edit Task</a>
+                        
                 </div>
                 {% else %}
                 <p>No Tasklists</p>

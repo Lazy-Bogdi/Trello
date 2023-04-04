@@ -30,6 +30,21 @@ class TaskType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
+            ->add('task_list', EntityType::class, [
+                // looks for choices from this entity
+                'class' => TaskList::class,
+                'empty_data' => null,
+                'placeholder' => 'Tasklist Actuelle',
+                'required'=>false,
+            
+                // uses the User.email property as the visible option string
+                'choice_label' => 'id',
+                'mapped' => true,
+            
+                // used to render a select box, check boxes or radios
+                'multiple' => false,
+                'expanded' => false,
+            ])            
 
             
         ;

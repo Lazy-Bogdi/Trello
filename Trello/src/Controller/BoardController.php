@@ -35,7 +35,7 @@ class BoardController extends AbstractController
     public function index(BoardRepository $boardRepository): Response
     {
         $user = $this->getUser();
-        $ownerBoards = $boardRepository->findBy(['owner' => $user]);
+        $ownerBoards = $boardRepository->findBy(['owner' => $user], ['id' => 'DESC']);
         $userBoards = $user->getMyBoards();
 
 
@@ -121,9 +121,10 @@ class BoardController extends AbstractController
     #[Route('/{id}', name: 'app_board_delete', methods: ['POST'])]
     public function delete(Request $request, Board $board, BoardRepository $boardRepository): Response
     {
-        // if ($this->isCsrfTokenValid('delete' . $board->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $board->getId(), $request->request->get('_token'))) {
             $boardRepository->remove($board, true);
-        // }
+        }
+        dd($board->getId());
 
         return $this->redirectToRoute('app_board_index', [], Response::HTTP_SEE_OTHER);
     }

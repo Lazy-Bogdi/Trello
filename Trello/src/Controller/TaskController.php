@@ -37,8 +37,14 @@ class TaskController extends AbstractController
         $boardId = $request->attributes->get('idBoard');
 
 
+// dd($form->getData()->getTaskListId());
         if ($form->isSubmitted() && $form->isValid()) {
-            $task->setTaskListId($taskListRepo->findOneBy(['id' => $taskListId]));
+            
+            // dd($form->getData()->getTaskListId());
+            if ($form->getData()->getTaskListId() == null) {
+                // dd('ko');
+                $task->setTaskListId($taskListRepo->findOneBy(['id' => $taskListId]));
+            }
             $usersArray = $form->get('users')->getData()->getValues();
             foreach ($usersArray as $users) {
                 $users->addTask($task);
@@ -65,10 +71,11 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{idBoard}/{idTL}TL/{idT}T/edit', name: 'app_task_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, TaskRepository $taskRepository, BoardRepository $boardRepository, UserRepository $userRepository): Response
+    public function edit(Request $request, TaskRepository $taskRepository, BoardRepository $boardRepository, UserRepository $userRepository, TaskListRepository $taskListRepo): Response
     {
         $boardId = $request->attributes->get('idBoard');
         $board = $boardRepository->findOneBy(['id' => $boardId]);
+        $taskListId = $request->attributes->get('idTL');
 
         $taskId = $request->attributes->get('idT');
         $task = $taskRepository->findOneBy(['id' => $taskId]);
@@ -76,7 +83,10 @@ class TaskController extends AbstractController
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
+        
         if ($form->isSubmitted() && $form->isValid()) {
+// dd($form->getData());
+            
 
             $usersArray = $form->get('users')->getData()->getValues();
             dump($usersArray);
@@ -87,9 +97,14 @@ class TaskController extends AbstractController
                 $user->removeTask($task);
                 // $taskRepository->save($task, false);
             }
-            
+
             // // }
             dump($task->getUsers()->getValues());
+            if ($form->getData()->getTaskListId() == null) {
+                // dd('ko');
+                $task->setTaskListId($taskListRepo->findOneBy(['id' => $taskListId]));
+            }
+            // die;
 
             if (count($usersArray) > 0) {
                 foreach ($usersArray as $users) {
@@ -116,10 +131,10 @@ class TaskController extends AbstractController
     {
         $boardId = $request->attributes->get('idBoard');
         $taskId = $request->attributes->get('idT');
-        $task = $taskRepository->findOneBy(['id'=>$taskId]);
+        $task = $taskRepository->findOneBy(['id' => $taskId]);
 
         // $board = $boardRepository->findOneBy(['id' => $boardId]);
-        
+
         if ($this->isCsrfTokenValid('delete' . $task->getId(), $request->request->get('_token'))) {
             $taskRepository->remove($task, true);
         }

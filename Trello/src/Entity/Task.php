@@ -22,7 +22,7 @@ class Task
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
-    private ?TaskList $task_list= null;
+    public ?TaskList $task_list= null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'task', fetch : 'EAGER', cascade : ['persist'])]
     private Collection $users;
