@@ -21,7 +21,7 @@ class TaskList
     #[ORM\ManyToOne(inversedBy: 'taskLists')]
     private ?Board $board = null;
 
-    #[ORM\OneToMany(mappedBy: 'task_list', targetEntity: Task::class)]
+    #[ORM\OneToMany(mappedBy: 'task_list', targetEntity: Task::class,cascade : ['remove'])]
     private Collection $tasks;
 
     public function __construct()

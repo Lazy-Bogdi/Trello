@@ -24,7 +24,7 @@ class Task
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     public ?TaskList $task_list= null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'task', fetch : 'EAGER', cascade : ['persist'])]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'task', fetch : 'EAGER', cascade : ['persist','remove'])]
     private Collection $users;
 
     public function __construct()

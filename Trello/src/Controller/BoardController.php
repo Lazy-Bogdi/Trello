@@ -16,6 +16,7 @@ use App\Repository\UserRepository;
 use App\Form\newTaskType;
 use App\Controller\TaskListController;
 
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +49,7 @@ class BoardController extends AbstractController
     }
 
     #[Route('/new', name: 'app_board_new', methods: ['GET', 'POST'])]
-    public function new (Request $request, BoardRepository $boardRepository): Response
+    public function new(Request $request, BoardRepository $boardRepository): Response
     {
         $board = new Board();
         $form = $this->createForm(BoardType::class, $board);
@@ -73,10 +74,14 @@ class BoardController extends AbstractController
     #[Route('/{id}', name: 'app_board_show', methods: ['GET', 'POST'])]
     public function show(Board $board, Request $request, BoardRepository $boardRepository, TaskRepository $taskRepo): Response
     {
+        // dd($this->container->get('security.csrf.token_manager')->getToken('delete' . $board->getId())->getValue());
+        $tokenValue = $this->container->get('security.csrf.token_manager')->getToken('delete' . $board->getId())->getValue();
         // Nouveau tableau de tâches 
         $newTaskList = new TaskList();
         $taskListForm = $this->createForm(newTaskListType::class, $newTaskList);
         $taskListForm->handleRequest($request);
+        $rqtok = $request->request->get('_token');
+        // dd($rqtok);
         $user = $this->getUser();
         // dd($user);
         if ($taskListForm->isSubmitted() && $taskListForm->isValid()) {
@@ -96,7 +101,9 @@ class BoardController extends AbstractController
             'board' => $board,
             'formNewTaskList' => $taskListForm,
             'taskLists' => $taskLists,
-            'userId' => $user->getId()
+            'userId' => $user->getId(),
+            'token' => $tokenValue,
+            'rek' => $rqtok
         ]);
     }
 
@@ -118,13 +125,10 @@ class BoardController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_board_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_board_delete', methods: ['POST'])]
     public function delete(Request $request, Board $board, BoardRepository $boardRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $board->getId(), $request->request->get('_token'))) {
-            $boardRepository->remove($board, true);
-        }
-        dd($board->getId());
+        $boardRepository->remove($board, true);
 
         return $this->redirectToRoute('app_board_index', [], Response::HTTP_SEE_OTHER);
     }

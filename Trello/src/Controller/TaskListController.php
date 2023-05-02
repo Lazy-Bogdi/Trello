@@ -37,7 +37,21 @@ class TaskListController extends AbstractController
         return $this->renderForm('task_list/edit.html.twig', [
             // 'task' => $task,
             'form' => $form,
-            'board' => $board
+            'board' => $board,
+            'tasklist' =>$taskList
         ]);
+    }
+
+    #[Route('/{idBoard}/{idTL}TL/delete', name: 'app_tasklist_delete', methods: ['GET', 'POST'])]
+    public function deleteTaskList(Request $request, TaskRepository $taskRepository, BoardRepository $boardRepository, UserRepository $userRepository, TaskListRepository $taskListRepo): Response
+    {
+        $taskListId = $request->attributes->get('idTL');
+        $taskList = $taskListRepo->findOneBy(['id' => $taskListId]);
+        $boardId = $request->attributes->get('idBoard');
+        // $board = $boardRepository->findOneBy(['id' => $boardId]);
+        // dd(taskList);
+        $taskListRepo->remove($taskList, true);
+
+        return $this->redirectToRoute('app_board_show', ['id' => $boardId], Response::HTTP_SEE_OTHER);
     }
 }

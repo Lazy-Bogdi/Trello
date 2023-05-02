@@ -6,6 +6,7 @@
     <h1>Edit Task</h1>
 
     {{ include('task_list/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('task_list/_delete_form.html.twig') }}
 
     <a href="{{ path('app_board_show',{'id': board.id}) }}">back to list</a>
 
