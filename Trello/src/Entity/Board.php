@@ -23,7 +23,7 @@ class Board
     #[ORM\OneToMany(mappedBy: 'board', targetEntity: TaskList::class, cascade: ['persist','remove'])]
     private Collection $taskLists;
 
-    #[ORM\ManyToOne(inversedBy: 'boards')]
+    #[ORM\ManyToOne(inversedBy: 'boards', cascade : ['remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
